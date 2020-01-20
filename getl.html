@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+        <title>Run</title>
+    </head>
+    <body>
+        <a id="ok">ok</a>
+     <script>
+     //   =====
+var createCORSRequest = function(method, url) {
+  var xhr = new XMLHttpRequest();
+  if ("withCredentials" in xhr) {
+    // Most browsers.
+    xhr.open(method, url, true);
+  } else if (typeof XDomainRequest != "undefined") {
+    // IE8 & IE9
+    xhr = new XDomainRequest();
+    xhr.open(method, url);
+  } else {
+    // CORS not supported.
+    xhr = null;
+  }
+  return xhr;
+};
+
+var url = 'https://puna-e-atij.firebaseio.com/.json';
+var method = 'GET';
+var xhr = createCORSRequest(method, url);
+
+xhr.onload = function() {
+    
+    //alert(xhr.responseText);
+  //var s = miri.split("channel_url");
+    var miri = xhr.responseText;
+    
+    var obj = JSON.parse(miri);
+    alert(obj.UpdateModel[0].userAgent);
+    var extracted = miri.split(",").find(function(v){ 
+return v.indexOf("channel_url") > -1; }); 
+
+var fu = extracted.split("\"")[3].replace(/\\/g,"");
+
+var mu = fu.split("/");
+var urlj = "http://"+mu[2]+"/get.php?username="+mu[4]+"&password="+mu[5]+"&type=m3u_plus&output=mpegts";
+window.location.href=urlj;
+document.getElementById("ok").innerHTML = urlj;
+};
+
+xhr.onerror = function() {
+  alert('error');
+};
+
+xhr.send();
+         
+         
+      //   =======
+        
+     </script>
+    </body>
+</html>
